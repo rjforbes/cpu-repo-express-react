@@ -15,7 +15,7 @@ SELECT * FROM liftdb WHERE wilks = ''; -- need to calculate wilks for these tota
 ALTER TABLE liftdb ADD COLUMN dirty smallint;
 
 -- Remove any entries that dont have a year associated
-DELETE FROM liftdb WHERE year = '';
+-- DELETE FROM liftdb WHERE year = '';
 
 
 -- Totals cleanup , Some entrys dont have a total on bench only, populate them then remove any empy ones
@@ -30,6 +30,7 @@ UPDATE liftdb SET squat = null WHERE squat = '';
 UPDATE liftdb SET bench = null WHERE bench = '';
 UPDATE liftdb SET dead = null WHERE dead = '';
 UPDATE liftdb SET wilks = null WHERE wilks = '';
+UPDATE liftdb SET year = null WHERE year = '';
 
 -- check for single quoted entries (a few on squats)
 SELECT * FROM liftdb WHERE squat ~ '''' OR bench ~ '''' OR dead ~ '''' OR total ~ '''' OR wilks ~ '''' ;
@@ -53,3 +54,4 @@ ALTER TABLE liftdb ALTER COLUMN bench TYPE double precision USING bench::double 
 ALTER TABLE liftdb ALTER COLUMN dead TYPE double precision USING dead::double precision;
 ALTER TABLE liftdb ALTER COLUMN wilks TYPE double precision; USING wilks::double precision
 ALTER TABLE liftdb ALTER COLUMN total TYPE double precision USING total::double precision;
+ALTER TABLE liftdb ALTER COLUMN year TYPE integer USING year::integer;
