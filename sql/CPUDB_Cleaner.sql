@@ -96,6 +96,44 @@ UPDATE liftdb SET dead = SUBSTRING(dead FROM '(.*\..*)\..*') WHERE dead ~ '(.*\.
 SELECT * FROM liftdb WHERE length(province) > 2;
 
 
+
+-- Select entries that dont have a standard category type
+SELECT * FROM liftdb WHERE category !~ 'Open' AND category !~ 'Junior' AND category !~ 'Sub-Junior' AND category !~ 'M1' AND category !~ 'M2' AND category !~ 'M3' 
+AND category !~ 'M4' AND category !~ 'M5' AND category !~ 'M6' AND category !~ 'M7' AND category !~ 'M8' AND category !~ 'SO';
+-- Update odd categories and spelling
+
+UPDATE liftdb SET category = 'Open' WHERE category = 'open';
+UPDATE liftdb SET category = 'Open', dirty = 1 WHERE category = '';
+
+UPDATE liftdb SET category = 'M1' WHERE category = 'Master1';
+UPDATE liftdb SET category = 'M1' WHERE category = 'Master 1';
+UPDATE liftdb SET category = 'M1' WHERE category = 'Master 1`';
+UPDATE liftdb SET category = 'M1' WHERE category = 'Master I';
+UPDATE liftdb SET category = 'M1' WHERE category = 'Maste 1';
+
+
+UPDATE liftdb SET category = 'M2' WHERE category = 'Master 2';
+UPDATE liftdb SET category = 'M2' WHERE category = 'Mster 2';
+UPDATE liftdb SET category = 'M2' WHERE category = 'Master2';
+UPDATE liftdb SET category = 'M2' WHERE category = 'Maaster 2';
+UPDATE liftdb SET category = 'M2' WHERE category = 'Master2 ';
+
+
+
+UPDATE liftdb SET category = 'M3' WHERE category = 'Master 3';
+UPDATE liftdb SET category = 'M4' WHERE category = 'Master 4';
+
+UPDATE liftdb SET category = 'M5' WHERE category = 'Master 5';
+UPDATE liftdb SET category = 'M6' WHERE category = 'Master 6';
+UPDATE liftdb SET category = 'M7' WHERE category = 'Master 7';
+
+UPDATE liftdb SET category = 'Sub-Junior' WHERE category = 'Sub-junior';
+UPDATE liftdb SET category = 'Junior' WHERE category = 'Junor';
+
+
+
+
+
 -- Select entries that dont have a standard type
 SELECT * FROM liftdb WHERE event_type !~ 'All' AND event_type !~ 'Single';
 -- Update 3-lift to All
@@ -130,6 +168,14 @@ ALTER TABLE liftdb ALTER COLUMN unequipped TYPE boolean USING unequipped::boolea
 ALTER TABLE liftdb ALTER COLUMN date TYPE timestamp USING date::timestamp;
 
 
+-- Add columns for lifterid and meet id
+ALTER TABLE liftdb ADD COLUMN lifter_id integer;
+ALTER TABLE liftdb ADD COLUMN meet_id integer;	
+
+
+-- Query checks
+
+SELECT * FROM liftdb WHERE unequipped = true AND category = 'Open' AND class = '120' AND wilks > 400;
 
 
 
