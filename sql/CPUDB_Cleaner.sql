@@ -46,6 +46,7 @@ UPDATE liftdb SET wilks = null WHERE wilks = '';
 UPDATE liftdb SET year = null WHERE year = '';
 
 
+
 -- check for single quoted entries (a few on squats)
 SELECT * FROM liftdb WHERE squat ~ '''' OR bench ~ '''' OR dead ~ '''' OR total ~ '''' OR wilks ~ '''' ;
 -- update those squat entries
@@ -94,7 +95,37 @@ UPDATE liftdb SET dead = SUBSTRING(dead FROM '(.*\..*)\..*') WHERE dead ~ '(.*\.
 
 -- Select entries that dont have 2 character province (will have evaluate here, CAN entered for international)
 SELECT * FROM liftdb WHERE length(province) > 2;
+-- NULL empty province entries
+UPDATE liftdb SET province = NULL WHERE province = '';
 
+SELECT * FROM liftdb WHERE province !~ '^[AB,BC,MB,NB,NL,NS,NT,NU,ON,PE,QC,SK,YT,CAN]+$'; -- Check for standard names
+
+-- Standardize province names
+UPDATE liftdb SET province ='NL' WHERE province = 'NF';
+UPDATE liftdb SET province ='SK' WHERE province = 'Sk.';
+UPDATE liftdb SET province ='SK' WHERE province = ' SK';
+UPDATE liftdb SET province ='CAN' WHERE province = ' CAN';
+
+UPDATE liftdb SET province ='AB' WHERE province = ' AB';
+UPDATE liftdb SET province ='ON' WHERE province = ' ON';
+UPDATE liftdb SET province ='BC' WHERE province = ' BC';
+UPDATE liftdb SET province ='MB' WHERE province = ' MB';
+UPDATE liftdb SET province ='PE' WHERE province = ' PE';
+UPDATE liftdb SET province ='NL' WHERE province = ' NL';
+UPDATE liftdb SET province ='NS' WHERE province = ' NS';
+UPDATE liftdb SET province ='NB' WHERE province = ' NB';
+
+UPDATE liftdb SET province ='ON' WHERE province = '0N';
+
+UPDATE liftdb SET province ='PE' WHERE province = 'PE ';
+UPDATE liftdb SET province ='NL' WHERE province = ' NL ';
+UPDATE liftdb SET province ='NL' WHERE province = 'NL ';
+
+UPDATE liftdb SET province ='PE' WHERE province = ' PEI';
+
+UPDATE liftdb SET province ='PE' WHERE province = 'PEI';
+UPDATE liftdb SET province ='QC' WHERE province = 'QU';
+UPDATE liftdb SET province ='QC' WHERE province = 'QU ';
 
 
 -- Select entries that dont have a standard category type
@@ -176,6 +207,7 @@ ALTER TABLE liftdb ADD COLUMN meet_id integer;
 -- Query checks
 
 SELECT * FROM liftdb WHERE unequipped = true AND category = 'Open' AND class = '120' AND wilks > 400;
+
 
 
 
