@@ -4,6 +4,17 @@
 -- We should also look into unique identifies for each lifter/meet
 -- A additional column for possible dirty data will be added to flag entries we are not sure of
 
+
+-- Pull the latest csv from the PL script, not the exporter on powerlifting.ca
+-- Login @ http://www.powerlifting.ca/webdata/cpudb_admin.html
+-- Select Search / modify then export as comma delimited without IncludeID, etc. checked.
+-- Copy the content of a page and paste in an editor.
+-- Add the following to the first row and save as CSV:
+-- meet,date,location,event_type,gender,name,province,weight,class_old,class,category,unequipped,squat,bench,dead,total,wilks,year
+-- Import to db wiht everything as "text" type and nullable
+-- procced to run the scripts below to clean the data.
+
+
 -- Data with issues we need to clean.
 SELECT * FROM liftdb WHERE meet = ''; -- all dirty entries
 SELECT * FROM liftdb WHERE year = ''; -- all empty entries
@@ -15,6 +26,9 @@ SELECT * FROM liftdb WHERE unequipped != 'yes' OR unequipped != null;
 SELECT * FROM liftdb WHERE gender != 'M' AND gender != 'F' ; -- a couple of lower case 'm's
 SELECT * FROM liftdb WHERE date = ''; -- one empty entry
 SELECT * FROM liftdb WHERE date ILIKE '%00-00%';  -- some entries have 
+
+-- Add a primary key column
+ALTER TABLE liftdb ADD COLUMN ID SERIAL PRIMARY KEY;
 
 
 -- Add column for dirty data
@@ -88,6 +102,9 @@ SELECT * FROM liftdb WHERE dead ILIKE '%.%.%';
 SELECT * FROM liftdb WHERE weight !~ '^[0-9,.]+$';
 -- temporary mutting, will have to figue out how to address (may use weight class, but what aobut 120+?
 UPDATE liftdb SET weight = null WHERE weight !~ '^[0-9,.]+$';
+
+-- Select non uniform weight classes:
+SELECT * FROM liftdb WHERE class !~ '^[47,52,57,59,63,66,72,74,83,84,84+,93,105,120,120+]+$';
 
 -- update remove last period in entries (2rows)
 UPDATE liftdb SET dead = SUBSTRING(dead FROM '(.*\..*)\..*') WHERE dead ~ '(.*\..*)\..*';
@@ -207,6 +224,48 @@ ALTER TABLE liftdb ADD COLUMN meet_id integer;
 -- Query checks
 
 SELECT * FROM liftdb WHERE unequipped = true AND category = 'Open' AND class = '120' AND wilks > 400;
+
+-- Biggest Male lifts in NB
+SELECT * FROM liftdb WHERE unequipped = true  AND bench IS NOT NULL AND province = 'ON' AND gender = 'M' ORDER BY bench DESC LIMIT 100;
+SELECT * FROM liftdb WHERE unequipped = true  AND squat IS NOT NULL AND province = 'NB' AND gender = 'M' ORDER BY squat DESC LIMIT 100;
+SELECT * FROM liftdb WHERE unequipped = true  AND dead IS NOT NULL AND province = 'NB' AND gender = 'M' ORDER BY dead DESC LIMIT 100;
+
+
+-- Top lifts by bodyweight
+SELECT * FROM liftdb WHERE unequipped = true  AND bench IS NOT NULL AND weight IS NOT NULL AND province = 'NB' AND gender = 'M' ORDER BY (bench/weight) DESC LIMIT 100;
+SELECT * FROM liftdb WHERE unequipped = true  AND squat IS NOT NULL AND weight IS NOT NULL AND province = 'NB' AND gender = 'M' ORDER BY (squat/weight) DESC LIMIT 100;
+SELECT * FROM liftdb WHERE unequipped = true  AND dead IS NOT NULL AND weight IS NOT NULL AND province = 'NB' AND gender = 'M' ORDER BY (dead/weight) DESC LIMIT 100;
+
+
+
+-- Biggest Female bench lifts in NB
+SELECT * FROM liftdb WHERE unequipped = true  AND bench IS NOT NULL AND province = 'NB' AND gender = 'F' ORDER BY bench DESC LIMIT 100;
+
+
+-- Get the distinct lifters
+SELECT * FROM (SELECT DISTINCT ON (name) name, squat, date, year, meet FROM liftdb WHERE unequipped = true  AND squat IS NOT NULL AND province = 'NB' ORDER BY name, squat DESC) AS QR ORDER BY squat DESC LIMIT 100;
+
+SELECT * FROM (SELECT DISTINCT ON (name) name, bench, date, year, meet FROM liftdb WHERE unequipped = true  AND bench IS NOT NULL AND province = 'NB' ORDER BY name, bench DESC) AS QR ORDER BY bench DESC LIMIT 100;
+
+SELECT * FROM (SELECT DISTINCT ON (name) name, dead, date, year, meet FROM liftdb WHERE unequipped = true  AND dead IS NOT NULL AND province = 'NB' ORDER BY name, dead DESC) AS QR ORDER BY dead DESC LIMIT 100;
+
+-- Top 100 individual squats for 2017 in the 120kg category
+SELECT * FROM (SELECT DISTINCT ON (name) name, squat, date, year, meet FROM liftdb WHERE unequipped = true  AND class ='120' AND year = 2017  AND squat IS NOT NULL ORDER BY name, squat DESC) AS QR ORDER BY squat DESC LIMIT 100;
+
+set client_encoding='utf8';
+
+-- Select the amount of equipped vs unequipped per year
+SELECT unequipped, 
+       SUM((unequipped = true and year = 2017)::int) as unequipped,
+       SUM((unequipped IS NULL and year = 2017)::int) as equipped
+  FROM liftdb GROUP BY unequipped
+
+
+SELECT MAX(bench),name
+FROM liftdb
+WHERE bench IS NOT NULL
+GROUP BY name
+ORDER BY MAX(bench) DESC;
 
 
 
