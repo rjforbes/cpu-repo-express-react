@@ -1,13 +1,79 @@
 import React, { Component } from 'react';
-import {ReactDOM} from 'react-dom';
-
-import { ReactHighcharts } from 'react-highcharts';
-//import { VictoryChart, VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis } from 'victory';
 import './App.css';
+const ReactHighcharts = require('react-highcharts');
+const ReactDOM = require('react-dom');
 
-var config = {
-  /* HighchartsConfig */
+//import { VictoryChart, VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis } from 'victory';
+
+
+/*
+const config = {
+    xAxis: {
+    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  },
+  series: [{
+    data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4]
+  }]
 };
+*/
+
+const config = {
+  
+  chart: {
+    type: 'column'
+},
+
+title: {
+    text: 'Top Unequipped Totals in NB'
+},
+
+subtitle: {
+    text: 'Subtitle'
+},
+
+legend: {
+    align: 'right',
+    verticalAlign: 'middle',
+    layout: 'vertical'
+},
+
+xAxis: {
+    categories: ['Squat', 'Bench', 'Deadlift', 'Total']
+},
+
+yAxis: {
+    title: {
+        text: 'kg'
+    }
+},
+
+series: [{
+    name: 'Mark Wasson',
+    data: [252.5,170,302.5,725]
+}, {
+    name: 'RJ Forbes',
+    data: [272.5,162.5,260,695]
+}, {
+    name: 'Guillaume Leblanc',
+    data: [250,157.5,272.5,680]
+}],
+
+responsive: {
+    rules: [{
+        condition: {
+            maxWidth: 500
+        },
+        chartOptions: {
+            legend: {
+                align: 'center',
+                verticalAlign: 'bottom',
+                layout: 'horizontal'
+            }
+        }
+    }]
+
+}
+}
 
 class App extends Component {
 
@@ -17,6 +83,8 @@ class App extends Component {
         .then(res => res.json())
         .then(lifts => this.setState({ lifts }));
 
+        //let chart = this.refs.chart.getChart();
+        //chart.series[0].addPoint({x: 10, y: 12});
     }
 
   constructor() {
@@ -37,8 +105,12 @@ class App extends Component {
   render() {
     return (
       <div>
-         <div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
+        <div>
+        <ReactHighcharts config={config} />
+          <div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
+        </div>
       </div>
+
     );
   }
 }

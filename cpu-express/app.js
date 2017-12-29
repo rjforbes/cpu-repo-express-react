@@ -39,7 +39,14 @@ app.get('/records/lift/:lift/unequipped/:unequipped/province/:province/weight/:w
   var weight = req.params.class;
   var gender = req.params.gender;
   var limit = req.params.limit;
-  var sqlQuery = "SELECT * FROM liftdb WHERE unequipped = " + unequipped + "  AND " + lift + " IS NOT NULL AND province = '" + province + "' AND gender = '" + gender + "' ORDER BY " + lift + " DESC LIMIT "+limit+";";
+  var sqlQuery = "";
+  if(lift == "all"){
+    sqlQuery = "SELECT * FROM liftdb WHERE unequipped = " + unequipped + "  AND total IS NOT NULL AND province = '" + province + "' AND gender = '" + gender + "' ORDER BY total DESC LIMIT "+limit+";";
+   }else {
+    sqlQuery = "SELECT * FROM liftdb WHERE unequipped = " + unequipped + "  AND " + lift + " IS NOT NULL AND province = '" + province + "' AND gender = '" + gender + "' ORDER BY " + lift + " DESC LIMIT "+limit+";";
+   };
+
+
   console.log("SQL Query: " + sqlQuery);
   db.run(sqlQuery, function(err, json ){
        res.json(json);
