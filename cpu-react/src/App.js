@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
-import { VictoryChart, VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis } from 'victory';
+import {ReactDOM} from 'react-dom';
+ 
+import { ReactHighcharts } from 'react-highcharts';
+//import { VictoryChart, VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis } from 'victory';
 import './App.css';
 
+var config = {
+  /* HighchartsConfig */
+};
 
 class App extends Component {
+
+ 
+
   constructor() {
     super();
     this.state = {};
@@ -20,7 +29,20 @@ class App extends Component {
   render() {
     return (
       <div style={{width:500}}>
-        <VictoryChart width={350} height={300} scale={{x: "time"}}
+        <ReactHighcharts config = {config}></ReactHighcharts>
+      </div>
+    );
+  }
+}
+
+
+
+export default App;
+
+
+
+/*
+ <VictoryChart width={350} height={300} scale={{x: "time"}}
           containerComponent={
             <VictoryZoomContainer
               zoomDimension="x"
@@ -79,12 +101,4 @@ class App extends Component {
               x="key"
               y="b"
             />
-          </VictoryChart>
-      </div>
-    );
-  }
-}
-
-
-
-export default App;
+          </VictoryChart>*/

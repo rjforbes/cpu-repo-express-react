@@ -2973,6 +2973,10 @@ he@1.1.x:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/he/-/he-1.1.1.tgz#93410fd21b009735151f8868c2f271f3427e23fd"
 
+highcharts@^6.0.0:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-6.0.4.tgz#bb6956de2fbe24fa4b6141be7ceadc052ca2abf9"
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -5173,6 +5177,12 @@ react-dom@^16.0.0:
 react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
+
+react-highcharts@^15.0.0:
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/react-highcharts/-/react-highcharts-15.0.0.tgz#b3eea96ad6a7f04c3e70827a34e9b1b47d88a2bb"
+  dependencies:
+    highcharts "^6.0.0"
 
 react-scripts@1.0.16:
   version "1.0.16"

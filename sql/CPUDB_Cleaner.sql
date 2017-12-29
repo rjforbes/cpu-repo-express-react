@@ -252,7 +252,13 @@ SELECT * FROM (SELECT DISTINCT ON (name) name, dead, date, year, meet FROM liftd
 -- Top 100 individual squats for 2017 in the 120kg category
 SELECT * FROM (SELECT DISTINCT ON (name) name, squat, date, year, meet FROM liftdb WHERE unequipped = true  AND class ='120' AND year = 2017  AND squat IS NOT NULL ORDER BY name, squat DESC) AS QR ORDER BY squat DESC LIMIT 100;
 
-set client_encoding='utf8';
+SELECT * FROM (SELECT DISTINCT ON (name) name, bench, date, year, meet FROM liftdb WHERE unequipped = true  AND class ='120' AND year = 2017  AND bench IS NOT NULL ORDER BY name, bench DESC) AS QR ORDER BY bench DESC LIMIT 100;
+
+SELECT * FROM (SELECT DISTINCT ON (name) name, dead, date, year, meet FROM liftdb WHERE unequipped = true  AND class ='120' AND year = 2017  AND dead IS NOT NULL ORDER BY name, dead DESC) AS QR ORDER BY dead DESC LIMIT 100;
+
+
+SELECT * FROM liftdbclean WHERE name ILIKE "é" LIMIT 100;
+
 
 -- Select the amount of equipped vs unequipped per year
 SELECT unequipped, 
