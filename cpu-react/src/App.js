@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {ReactDOM} from 'react-dom';
- 
+
 import { ReactHighcharts } from 'react-highcharts';
 //import { VictoryChart, VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis } from 'victory';
 import './App.css';
@@ -11,11 +11,19 @@ var config = {
 
 class App extends Component {
 
- 
+  componentDidMount() {
+    
+        fetch('/records/lift/squat/unequipped/true/province/NB/weight/ALL/gender/M/limit/10')
+        .then(res => res.json())
+        .then(lifts => this.setState({ lifts }));
+
+    }
 
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      lifts:[]
+    };
   }
 
   handleZoom(domain) {
@@ -28,14 +36,15 @@ class App extends Component {
 
   render() {
     return (
-      <div style={{width:500}}>
-        <ReactHighcharts config = {config}></ReactHighcharts>
+      <div>
+         <div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
       </div>
     );
   }
 }
 
-
+// 
+//  <ReactHighcharts config = {config}></ReactHighcharts>
 
 export default App;
 
