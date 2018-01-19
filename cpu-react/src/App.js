@@ -139,11 +139,11 @@ responsive: {
 class App extends Component {
 
   componentDidMount() {
-    
+       
         fetch('/records/lift/squat/unequipped/true/province/NB/weight/ALL/gender/M/limit/10')
         .then(res => res.json())
         .then(lifts => this.setState({ lifts }))
-        .then(this.state.chartConfig = this.config);
+        .then();
         //let chart = this.refs.chart.getChart();
         //chart.series[0].addPoint({x: 10, y: 12});
     }
@@ -154,6 +154,7 @@ class App extends Component {
       lifts:[],
       chartConfig:{}
     };
+     this.state.chartConfig = this.config;
   }
 
   handleZoom(domain) {
@@ -169,7 +170,7 @@ class App extends Component {
       <div>
         <div>
        
-        <ReactHighcharts config={this.state.chartConfig} />
+        <ReactHighcharts config={config} />
           <div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
         </div>
       </div>
