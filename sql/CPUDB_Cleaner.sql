@@ -276,6 +276,22 @@ ORDER BY MAX(bench) DESC;
 
 
 
+
+
+
+-- Grouping
+
+SELECT meet,  
+  name,
+  CAST(AVG(wilks) AS double precision) AS avg_wilks
+ FROM liftdb
+ WHERE wilks > 0 -- states only
+ GROUP BY GROUPING SETS (meet, name, ());
+
+
+SELECT AVG(wilks) 
+FROM liftdb;
+
 ----------- PGSQL FUNCTIONS
 
 -- Check if Date

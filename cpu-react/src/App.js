@@ -6,17 +6,78 @@ const ReactDOM = require('react-dom');
 //import { VictoryChart, VictoryZoomContainer,VictoryLine,VictoryBrushContainer,VictoryAxis } from 'victory';
 
 
-/*
 const config = {
+     chart: {
+        type: 'spline'
+    },
+    title: {
+        text: 'CPU Lifts'
+    },
+    subtitle: {
+        text: 'Recorded lifts from 2016-2017'
+    },
     xAxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-  },
-  series: [{
-    data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 454.4]
-  }]
-};
-*/
+        type: 'datetime',
+       /* dateTimeLabelFormats: { // don't display the dummy year
+            month: '%e. %b',
+            year: '%b'
+        },*/
+        title: {
+            text: 'Date'
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Weight (kg)'
+        },
+        min: 139
+    },
+    tooltip: {
+        headerFormat: '<b>{series.name}</b><br>',
+        pointFormat: '{point.x: %b,%e} <br> {point.y:.1f} kg'
+    },
 
+    plotOptions: {
+        spline: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+
+    series: [{
+        name: 'Squat',
+        // Define the data points. All series have a dummy year
+        // of 1970/71 in order to be compared on the same x axis. Note
+        // that in JavaScript, months start at 0 for January, 1 for February etc.
+        data: [
+            [Date.UTC(2016, 11, 3), 200],
+            [Date.UTC(2017, 1, 11), 215],
+            [Date.UTC(2017, 4, 27), 250],
+            [Date.UTC(2017, 9, 27), 272.5],
+        ]
+    }, {
+        name: 'Bench',
+        data: [
+          [Date.UTC(2016, 11, 3), 137.5],
+          [Date.UTC(2017, 1, 11), 145],
+          [Date.UTC(2017, 4, 27), 155],
+          [Date.UTC(2017, 9, 27), 162.5],
+        ]
+    }, {
+        name: 'Deadlift',
+        data: [
+          [Date.UTC(2016, 11, 3), 210],
+          [Date.UTC(2017, 1, 11), 235],
+          [Date.UTC(2017, 4, 27), 240],
+          [Date.UTC(2017, 9, 27), 260],
+        ]
+    }]
+
+};
+
+
+/*
 const config = {
   
   chart: {
@@ -74,15 +135,15 @@ responsive: {
 
 }
 }
-
+*/
 class App extends Component {
 
   componentDidMount() {
     
         fetch('/records/lift/squat/unequipped/true/province/NB/weight/ALL/gender/M/limit/10')
         .then(res => res.json())
-        .then(lifts => this.setState({ lifts }));
-
+        .then(lifts => this.setState({ lifts }))
+        .then(this.state.chartConfig = this.config);
         //let chart = this.refs.chart.getChart();
         //chart.series[0].addPoint({x: 10, y: 12});
     }
@@ -90,7 +151,8 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      lifts:[]
+      lifts:[],
+      chartConfig:{}
     };
   }
 
@@ -106,7 +168,8 @@ class App extends Component {
     return (
       <div>
         <div>
-        <ReactHighcharts config={config} />
+       
+        <ReactHighcharts config={this.state.chartConfig} />
           <div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
         </div>
       </div>
