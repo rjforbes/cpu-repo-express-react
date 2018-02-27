@@ -169,15 +169,20 @@ class App extends Component {
     return (
       <div>
         <div>
-       
-        <ReactHighcharts config={config} />
-          <div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
+       <center>
+         <img  src="images/NBPL-Logo-Ship-Small.png" width="50%" height="50%" alt="NBPL"/>  
+         </center>
+        
         </div>
       </div>
 
     );
   }
 }
+/*
+<ReactHighcharts config={config} />
+<div>{this.state.lifts.map((item) => (<div>{item.name + ' ' + item.squat}</div>))}</div>
+*/
 
 // 
 //  <ReactHighcharts config = {config}></ReactHighcharts>
